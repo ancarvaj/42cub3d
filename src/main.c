@@ -2,27 +2,17 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include "libft/libft.h"
+#include "gnl/get_next_line.h"
 
-size_t	ft_strlen(const char *s)
+const enum e_identifier
 {
-	size_t	len;
-
-	if (!s)
-		return (0);
-	len = 0;
-	while (s[len])
-		len++;
-	return (len);
-}
-
-enum e_identifier
-{
-	NO = 0,
-	SO = 1,
-	WE = 2,
-	EA = 3,
-	F = 4,
-	C = 5 
+	NO = 1,
+	SO = 2,
+	WE = 4,
+	EA = 8,
+	F = 16,
+	C = 32
 };
 
 int	ft_map_ext_check(const char *name)
@@ -43,12 +33,45 @@ int	ft_map_ext_check(const char *name)
 	return (0);
 }
 
+enum e_identifier	ft_get_identifier(const char *line)
+{
+	int	i;
+
+	if (!line || !line[0] || line[0] == '\n')
+		return (0);
+	i = 0;
+	while (line[i] == ' ')
+		i++;
+	
+}
+/*
+	if (!ft_strncmp("NO", line, ft_strlen(line)))
+		return (NO);
+	if (!ft_strncmp("SO", line, ft_strlen(line)))
+		return (SO);
+	if (!ft_strncmp("WE", line, ft_strlen(line)))
+		return (WE);
+	if (!ft_strncmp("EA", line, ft_strlen(line)))
+		return (EA);
+	if (!ft_strncmp("F", line, ft_strlen(line)))
+		return (F);
+	if (!ft_strncmp("C", line, ft_strlen(line)))
+		return (C);
+	return (-1);
+*/
+
+
 int	ft_map_error_checker(int fd)
 {
-	enum		e_identifier;
 	const unsigned char	bin = NO | SO | WE | EA | F | C;
 	unsigned char	map_bin = 0;
+	char			*s;
 
+	while ((s = get_next_line(fd)))
+	{
+		map_bin |= ft_get_identidier(s);
+		free(s);
+	}
 	//while gnl if NO/SO/WE/EA/F/C map_bin |= NO/SO/WE/EA/F/C
 	//if bin != map_bin return error
 	//check if 0,255 color
