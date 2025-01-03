@@ -10,7 +10,6 @@ LIB := libft/libft.a minilibx/libmlx_Linux.a
 
 SRCS = src/main.c\
 	   src/libft_utils.c src/map_error.c\
-	   src/gnl/get_next_line.c src/gnl/get_next_line_utils.c\
 
 OBJS := ${SRCS:c=o}
 

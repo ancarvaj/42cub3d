@@ -6,7 +6,7 @@
 #    By: ancarvaj <ancarvaj@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/18 15:24:21 by ancarvaj          #+#    #+#              #
-#    Updated: 2025/01/03 15:12:48 by ancarvaj         ###   ########.fr        #
+#    Updated: 2025/01/03 18:00:43 by ancarvaj         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,6 +46,8 @@ SOURCES =	ft_isalpha.c \
 			ft_putstr_fd.c \
 			ft_putendl_fd.c \
 			ft_putnbr_fd.c \
+			get_next_line_utils.c \
+			get_next_line.c \
 
 BONUS =		ft_lstnew_bonus.c \
 			ft_lstadd_front_bonus.c \

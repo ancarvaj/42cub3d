@@ -6,7 +6,7 @@
 /*   By: ancarvaj <ancarvaj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 15:25:49 by ancarvaj          #+#    #+#             */
-/*   Updated: 2025/01/03 15:04:25 by ancarvaj         ###   ########.fr       */
+/*   Updated: 2025/01/03 17:59:17 by ancarvaj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <string.h>
 # include <limits.h>
 # include <stdint.h>
+# include "get_next_line.h"
 
 typedef struct s_list
 {
@@ -70,4 +71,5 @@ void			ft_lstclear(t_list **lst, void (*del)(void *));
 void			ft_lstiter(t_list *lst, void (*f)(void *));
 t_list			*ft_lstmap(t_list *lst,
 					void *(*f)(void *), void (*del)(void *));
+char			*get_next_line(int fd);
 #endif

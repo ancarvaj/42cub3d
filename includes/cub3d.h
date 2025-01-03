@@ -6,7 +6,6 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include "../libft/libft.h"
-#include "../src/gnl/get_next_line.h"
 
 enum e_identifier
 {
