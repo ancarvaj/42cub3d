@@ -21,8 +21,8 @@ int	ft_map_ext_check(const char *name)
 
 int	ft_is_map_char(char c)
 {
-	int	i;
-	const char map_char[8] = "01NSEW \n";
+	int			i;
+	const char	map_char[7] = " 01NSEW";
 
 	i = 0;
 	while (map_char[i])
@@ -36,21 +36,21 @@ int	ft_is_map_char(char c)
 
 enum e_identifier	ft_identifier(const char *line)
 {
-	if (!ft_strncmp("NO", line, ft_strlen(line)))
+	if (!ft_strncmp("NO", line, ft_strlen(line) + 1))
 		return (NO);
-	if (!ft_strncmp("SO", line, ft_strlen(line)))
+	if (!ft_strncmp("SO", line, ft_strlen(line) + 1))
 		return (SO);
-	if (!ft_strncmp("WE", line, ft_strlen(line)))
+	if (!ft_strncmp("WE", line, ft_strlen(line) + 1))
 		return (WE);
-	if (!ft_strncmp("EA", line, ft_strlen(line)))
+	if (!ft_strncmp("EA", line, ft_strlen(line) + 1))
 		return (EA);
-	if (!ft_strncmp("F", line, ft_strlen(line)))
+	if (!ft_strncmp("F", line, ft_strlen(line) + 1))
 		return (F);
-	if (!ft_strncmp("C", line, ft_strlen(line)))
+	if (!ft_strncmp("C", line, ft_strlen(line) + 1))
 		return (C);
 	if (!ft_is_map_char(line[0]))
-		return (-2);
-	return (-1);
+		return (MAP_CHAR);
+	return (ERR);
 }
 
 enum e_identifier	ft_get_identifier(const char *line)
@@ -70,75 +70,76 @@ enum e_identifier	ft_get_identifier(const char *line)
 		j++;
 	str = ft_strdup_len(line + i, j);
 	ident = ft_identifier(str);
+	//free(str)
+	//str = ft_strdup(line + i + j);
+	//if (ft_check_path(str))
+	//retunr (1)
 	free(str);
 	return (ident);
 }
 
-int	ft_is_map(const char *s)
+int	ft_is_valid_map(const char *content)
 {
-	int	i;
+	int		i;
+	int		j;
+	int		t;
+	char	*line;
 
-	if (!s || !s[0])
-		return (1);
 	i = 0;
-	while (s[i])
+	j = 0;
+	while (content[i])
 	{
-		if (ft_is_map_char(s[i]))
-			return (1);
+		if (content[i] == '\n')
+		{
+			line = ft_strdup_len(content + j, i - j);
+			if (!line[0])
+			{
+				free(line);
+				return (1);
+			}
+			printf("line->%s\n", line);
+			t = 0;
+			while (line[t])
+			{
+				if (ft_is_map_char(line[t]))
+					return (1);
+				t++;
+			}
+			free(line);
+			j = i + 1;
+		}
 		i++;
 	}
 	return (0);
 }
 
-int	ft_is_valid_map(int fd)
-{
-	int		i;
-	char	*s;
-
-	i = 0;
-	while ((s = get_next_line(fd)))
-	{
-		if (s[0] == '\n')
-		{
-			free(s);
-			return (1);
-		}
-		if (ft_is_map(s))
-		{
-			free(s);
-			return (1);
-		}
-		free(s);
-	}
-	return (0);
-}
-
-int	ft_map_error_checker(int fd)
+int	ft_map_error_checker(const char *content)
 {
 	const unsigned char	bin = NO | SO | WE | EA | F | C;
 	unsigned char		map_bin = 0;
-	char				*s;
 	enum e_identifier	ident;
+	int					i;
+	int					j;
 
-	while ((s = get_next_line(fd)))
+	i = 0;
+	j = 0;
+	while (content[i])
 	{
-		ident = ft_get_identifier(s);
-		if (ident == (enum e_identifier)-2)
+		if (content[i] == '\n')
 		{
-			if (ft_is_map(s))
+			ident = ft_get_identifier(content + j);
+			if (ident == MAP_CHAR && map_bin == bin)
 			{
-				free(s);
+				if (!ft_is_valid_map(content + j))
+					return (0);
 				return (1);
 			}
-			free(s);
-			if (!ft_is_valid_map(fd) && map_bin == bin)
-				return (0);
-			return (1);
+			if (ident == ERR)
+				return(1);
+			map_bin |= ident;
+			j = i + 1;
 		}
-		free(s);
-		if (ident == (enum e_identifier)-1)
-			return (1);
-		map_bin |=  ident;
+		i++;
 	}
 	//check if 0,255 color
 	//check if path texture is correct
@@ -148,9 +149,25 @@ int	ft_map_error_checker(int fd)
 	return (1);
 }
 
+char	*ft_get_file_content(int fd)
+{
+	char	*file_content;
+	char	*s;
+
+	s = NULL;
+	file_content = NULL;
+	while ((s = get_next_line(fd)))
+	{
+		file_content = ft_strjoin_gnl(file_content, s);
+		free(s);
+	}
+	return (file_content);
+}
+
 int main(int ac, char *av[])
 {
-	int	fd;
+	int		fd;
+	char	*file_content;
 
 	if (ac != 2)
 	{
@@ -163,13 +180,14 @@ int main(int ac, char *av[])
 		return (1);
 	}
 	fd = open(av[1], O_RDONLY);
-	if (ft_map_error_checker(fd))
+	file_content = ft_get_file_content(fd);
+	if (ft_map_error_checker(file_content))
 	{
-
 		write(2, "Error\nNot a valid map file\n", 28);
 		close(fd);
 		return (1);
 	}
+	free(file_content);
 	//if (ft_start_game())
 		//return (1)
 	close(fd);

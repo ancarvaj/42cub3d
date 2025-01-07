@@ -9,6 +9,8 @@
 
 enum e_identifier
 {
+	MAP_CHAR = -2,
+	ERR = -1,
 	NO = 1,
 	SO = 2,
 	WE = 4,

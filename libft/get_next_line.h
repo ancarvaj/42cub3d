@@ -6,7 +6,7 @@
 /*   By: ancarvaj <ancarvaj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/04 23:54:49 by ancarvaj          #+#    #+#             */
-/*   Updated: 2024/12/31 15:49:41 by ancarvaj         ###   ########.fr       */
+/*   Updated: 2025/01/07 12:47:23 by ancarvaj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # include <fcntl.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
+#  define BUFFER_SIZE 100
 # endif
 
 char	*get_next_line(int fd);
